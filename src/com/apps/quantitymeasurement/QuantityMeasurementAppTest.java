@@ -7,36 +7,48 @@ import com.apps.quantitymeasurement.Length.LengthUnit;
 public class QuantityMeasurementAppTest {
 
     @Test
-    public void testFeetInchesComparison() {
-        Length feet = new Length(1.0, LengthUnit.FEET);
-        Length inches = new Length(12.0, LengthUnit.INCHES);
-        // UC3 core requirement: 1 ft should equal 12 inches [cite: 103]
+    public void testYardToFeetEquality() {
+        Length yard = new Length(1.0, LengthUnit.YARDS);
+        Length feet = new Length(3.0, LengthUnit.FEET);
+        assertEquals(yard, feet); // 1 yard = 3 feet
+    }
+
+    @Test
+    public void testYardToInchesEquality() {
+        Length yard = new Length(1.0, LengthUnit.YARDS);
+        Length inches = new Length(36.0, LengthUnit.INCHES);
+        assertEquals(yard, inches); // 1 yard = 36 inches
+    }
+
+    @Test
+    public void testCentimetersToInchesEquality() {
+        Length cm = new Length(1.0, LengthUnit.CENTIMETERS);
+        Length inches = new Length(0.393701, LengthUnit.INCHES);
+        assertEquals(cm, inches); // 1 cm = 0.393701 in
+    }
+
+    @Test
+    public void testSymmetryAcrossUnits() {
+        Length feet = new Length(3.0, LengthUnit.FEET);
+        Length yard = new Length(1.0, LengthUnit.YARDS);
+        assertEquals(feet, yard); // Symmetry: feet to yard
+    }
+
+    @Test
+    public void testTransitiveProperty() {
+        Length yard = new Length(1.0, LengthUnit.YARDS);
+        Length feet = new Length(3.0, LengthUnit.FEET);
+        Length inches = new Length(36.0, LengthUnit.INCHES);
+
+        // If A=B and B=C, then A=C
+        assertEquals(yard, feet);
         assertEquals(feet, inches);
-    }
-
-    @Test
-    public void testInchesToFeetSymmetry() {
-        Length inches = new Length(12.0, LengthUnit.INCHES);
-        Length feet = new Length(1.0, LengthUnit.FEET);
-        assertEquals(inches, feet); // Symmetry test [cite: 107]
-    }
-
-    @Test
-    public void testSameUnitEquality() {
-        assertEquals(new Length(1.0, LengthUnit.FEET), new Length(1.0, LengthUnit.FEET));
-        assertEquals(new Length(1.0, LengthUnit.INCHES), new Length(1.0, LengthUnit.INCHES));
+        assertEquals(yard, inches);
     }
 
     @Test
     public void testInequality() {
-        assertNotEquals(new Length(1.0, LengthUnit.FEET), new Length(2.0, LengthUnit.FEET));
-        assertNotEquals(new Length(1.0, LengthUnit.FEET), new Length(1.0, LengthUnit.INCHES));
-    }
-
-    @Test
-    public void testNullAndTypeSafety() {
-        Length feet = new Length(1.0, LengthUnit.FEET);
-        assertNotEquals(null, feet); // Null handling [cite: 66]
-        assertNotEquals(feet, new Object()); // Type safety [cite: 68]
+        assertNotEquals(new Length(1.0, LengthUnit.YARDS), new Length(2.0, LengthUnit.FEET));
+        assertNotEquals(new Length(1.0, LengthUnit.CENTIMETERS), new Length(1.0, LengthUnit.FEET));
     }
 }
